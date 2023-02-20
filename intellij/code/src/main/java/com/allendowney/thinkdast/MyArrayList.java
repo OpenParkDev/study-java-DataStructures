@@ -15,37 +15,35 @@ public class MyArrayList<T> implements List<T> {
 	int size;                    // keeps track of the number of elements
 	private T[] array;           // stores the elements
 
-	/**
-	 *
-	 */
 	@SuppressWarnings("unchecked")
 	public MyArrayList() {
-		// You can't instantiate an array of T[], but you can instantiate an
-		// array of Object and then typecast it.  Details at
-		// http://www.ibm.com/developerworks/java/library/j-jtp01255/index.html
 		array = (T[]) new Object[10];
 		size = 0;
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		// run a few simple tests
-		MyArrayList<Integer> mal = new MyArrayList<Integer>();
+		MyArrayList<Integer> mal = new MyArrayList<>();
 		mal.add(1);
 		mal.add(2);
 		mal.add(3);
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
 
-		mal.remove(new Integer(2));
+		mal.remove(2);
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean add(T element) {
-		// TODO: FILL THIS IN!
-		return false;
+		if (array.length == size) {
+			T[] bigger = (T[]) new Object[array.length*2];
+			System.arraycopy(array, 0, bigger, 0, array.length);
+			array = bigger;
+		}
+		array[size] = element;
+		size++;
+		return true;
 	}
 
 	@Override
@@ -53,14 +51,10 @@ public class MyArrayList<T> implements List<T> {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}
-		// add the element to get the resizing
 		add(element);
-
-		// shift the elements
-		for (int i=size-1; i>index; i--) {
-			array[i] = array[i-1];
+		if (size - 1 - index >= 0) {
+			System.arraycopy(array, index, array, index + 1, size - 1 - index);
 		}
-		// put the new one in the right place
 		array[index] = element;
 	}
 
@@ -110,17 +104,14 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: FILL THIS IN!
+		for (int i = 0; i < size; i++) {
+			if (equals(target, array[i])) {
+				return i;
+			}
+		}
 		return -1;
 	}
 
-	/** Checks whether an element of the array is the target.
-	 *
-	 * Handles the special case that the target is null.
-	 *
-	 * @param target
-	 * @param object
-	 */
 	private boolean equals(Object target, Object element) {
 		if (target == null) {
 			return element == null;
@@ -136,9 +127,7 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		// make a copy of the array
 		T[] copy = Arrays.copyOf(array, size);
-		// make a list and return an iterator
 		return Arrays.asList(copy).iterator();
 	}
 
@@ -163,9 +152,7 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		// make a copy of the array
 		T[] copy = Arrays.copyOf(array, size);
-		// make a list and return an iterator
 		return Arrays.asList(copy).listIterator(index);
 	}
 
@@ -181,8 +168,10 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		// TODO: FILL THIS IN!
-		return null;
+		T prev = get(index);
+		System.arraycopy(array, index + 1, array, index, size - 1 - index);
+		size--;
+		return prev;
 	}
 
 	@Override
@@ -201,8 +190,9 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public T set(int index, T element) {
-		// TODO: FILL THIS IN!
-		return null;
+		T prev = get(index);
+		array[index] = element;
+		return prev;
 	}
 
 	@Override

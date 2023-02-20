@@ -6,11 +6,14 @@ import java.util.List;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.jsoup.nodes.Node;
 
 public class WikiPhilosophy {
 
-    final static List<String> visited = new ArrayList<String>();
+    final static List<String> visited = new ArrayList<>();
     final static WikiFetcher wf = new WikiFetcher();
+
+    final static String prefix = "https://en.wikipedia.org";
 
     /**
      * Tests a conjecture about Wikipedia and Philosophy.
@@ -22,8 +25,6 @@ public class WikiPhilosophy {
      * 3. Stopping when reaching "Philosophy", a page with no links or a page
      *    that does not exist, or when a loop occurs
      *
-     * @param args
-     * @throws IOException
      */
     public static void main(String[] args) throws IOException {
         String destination = "https://en.wikipedia.org/wiki/Philosophy";
@@ -32,14 +33,20 @@ public class WikiPhilosophy {
         testConjecture(destination, source, 10);
     }
 
-    /**
-     * Starts from given URL and follows first link until it finds the destination or exceeds the limit.
-     *
-     * @param destination
-     * @param source
-     * @throws IOException
-     */
     public static void testConjecture(String destination, String source, int limit) throws IOException {
-        // TODO: FILL THIS IN!
+        Elements paras = wf.fetchWikipedia(source);
+
+        for (Element para : paras) {
+            if (para.hasText()) {
+                Iterable<Node> iter = new WikiNodeIterable(para);
+                for (Node node : iter) {
+
+//                    if (!node.nodeName().equals("a")) {
+//                        continue;
+//                    }
+                    System.out.println(node.nodeName() + " : " + node);
+                }
+            }
+        }
     }
 }

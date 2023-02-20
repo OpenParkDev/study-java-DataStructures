@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.allendowney.thinkdast;
 
 import java.util.Arrays;
@@ -16,12 +13,6 @@ import java.util.ListIterator;
  */
 public class MyLinkedList<E> implements List<E> {
 
-	/**
-	 * Node is identical to ListNode from the example, but parameterized with T
-	 *
-	 * @author downey
-	 *
-	 */
 	private class Node {
 		public E data;
 		public Node next;
@@ -43,9 +34,6 @@ public class MyLinkedList<E> implements List<E> {
 	private int size;            // keeps track of the number of elements
 	private Node head;           // reference to the first node
 
-	/**
-	 *
-	 */
 	public MyLinkedList() {
 		head = null;
 		size = 0;
@@ -56,13 +44,13 @@ public class MyLinkedList<E> implements List<E> {
 	 */
 	public static void main(String[] args) {
 		// run a few simple tests
-		List<Integer> mll = new MyLinkedList<Integer>();
+		List<Integer> mll = new MyLinkedList<>();
 		mll.add(1);
 		mll.add(2);
 		mll.add(3);
 		System.out.println(Arrays.toString(mll.toArray()) + " size = " + mll.size());
 
-		mll.remove(new Integer(2));
+		mll.remove(Integer.valueOf(2));
 		System.out.println(Arrays.toString(mll.toArray()) + " size = " + mll.size());
 	}
 
@@ -71,9 +59,7 @@ public class MyLinkedList<E> implements List<E> {
 		if (head == null) {
 			head = new Node(element);
 		} else {
-			Node node = head;
-			// loop until the last node
-			for ( ; node.next != null; node = node.next) {}
+			Node node = getNode(size-1);
 			node.next = new Node(element);
 		}
 		size++;
@@ -82,7 +68,14 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
-		//TODO: FILL THIS IN!
+		if (index == 0) {
+			head = new Node(element, head);
+		}
+		else {
+			Node node = getNode(index-1);
+			node.next = new Node(element, node.next);
+		}
+		size++;
 	}
 
 	@Override
@@ -126,10 +119,6 @@ public class MyLinkedList<E> implements List<E> {
 		return node.data;
 	}
 
-	/** Returns the node at the given index.
-	 * @param index
-	 * @return
-	 */
 	private Node getNode(int index) {
 		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
@@ -143,17 +132,16 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
-		//TODO: FILL THIS IN!
+		Node node = head;
+		for (int index = 0; index < size; index++) {
+			if (equals(target, node.data)) {
+				return index;
+			}
+			node = node.next;
+		}
 		return -1;
 	}
 
-	/** Checks whether an element of the array is the target.
-	 *
-	 * Handles the special case that the target is null.
-	 *
-	 * @param target
-	 * @param object
-	 */
 	private boolean equals(Object target, Object element) {
 		if (target == null) {
 			return element == null;
@@ -168,6 +156,7 @@ public class MyLinkedList<E> implements List<E> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Iterator<E> iterator() {
 		E[] array = (E[]) toArray();
 		return Arrays.asList(array).iterator();
@@ -208,8 +197,16 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		//TODO: FILL THIS IN!
-		return null;
+		E prev = get(index);
+		if (index == 0) {
+			head = head.next;
+		}
+		else {
+			Node node = getNode(index-1);
+			node.next = node.next.next;
+		}
+		size--;
+		return prev;
 	}
 
 	@Override
@@ -246,7 +243,7 @@ public class MyLinkedList<E> implements List<E> {
 		}
 		// TODO: classify this and improve it.
 		int i = 0;
-		MyLinkedList<E> list = new MyLinkedList<E>();
+		MyLinkedList<E> list = new MyLinkedList<>();
 		for (Node node=head; node != null; node = node.next) {
 			if (i >= fromIndex && i <= toIndex) {
 				list.add(node.data);

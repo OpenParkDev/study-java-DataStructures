@@ -23,30 +23,30 @@ public class WikiNodeExample {
 		// download and parse the document
 		Connection conn = Jsoup.connect(url);
 		Document doc = conn.get();
-		
+
 		// select the content text and pull out the paragraphs.
 		Element content = doc.getElementById("mw-content-text");
-				
+
 		// TODO: avoid selecting paragraphs from sidebars and boxouts
 		Elements paras = content.select("p");
-		Element firstPara = paras.get(0);
+		Element firstPara = paras.get(2);
 		
 		recursiveDFS(firstPara);
 		System.out.println();
 
-		iterativeDFS(firstPara);
-		System.out.println();
+//		iterativeDFS(firstPara);
+//		System.out.println();
 
 		Iterable<Node> iter = new WikiNodeIterable(firstPara);
 		for (Node node: iter) {
 			if (node instanceof TextNode) {
-				System.out.print(node);
+				System.out.println(node);
 			}
 		}
 	}
 
 	private static void iterativeDFS(Node root) {
-		Deque<Node> stack = new ArrayDeque<Node>();
+		Deque<Node> stack = new ArrayDeque<>();
 		stack.push(root);
 
 		// if the stack is empty, we're done
@@ -55,11 +55,11 @@ public class WikiNodeExample {
 			// otherwise pop the next Node off the stack
 			Node node = stack.pop();
 			if (node instanceof TextNode) {
-				System.out.print(node);
+				System.out.println(node);
 			}
 
 			// push the children onto the stack in reverse order
-			List<Node> nodes = new ArrayList<Node>(node.childNodes());
+			List<Node> nodes = new ArrayList<>(node.childNodes());
 			Collections.reverse(nodes);
 			
 			for (Node child: nodes) {
@@ -70,7 +70,7 @@ public class WikiNodeExample {
 
 	private static void recursiveDFS(Node node) {
 		if (node instanceof TextNode) {
-			System.out.print(node);
+			System.out.println(node);
 		}
 		for (Node child: node.childNodes()) {
 			recursiveDFS(child);

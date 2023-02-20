@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.allendowney.thinkdast;
 
 import java.awt.Color;
@@ -32,18 +29,10 @@ public class Profiler extends ApplicationFrame {
 
 	/**
 	 * Timeable defines the methods an object must provide to work with Profiler
-	 *
 	 */
 	public interface Timeable {
-		/*
-		 * setup is invoked before the clock starts.
-		 */
-		public void setup(int n);
-
-		/*
-		 * timeMe does whatever operation we are timing.
-		 */
-		public void timeMe(int n);
+		void setup(int n);
+		void timeMe(int n);
 	}
 
 	private Timeable timeable;
@@ -53,13 +42,6 @@ public class Profiler extends ApplicationFrame {
 		this.timeable = timeable;
 	}
 
-	/**
-	 * Invokes timeIt with a range of `n` from `startN` until runtime exceeds `endMillis`.
-	 *
-	 * @param data.timeable
-	 * @param n
-	 * @return
-	 */
 	public XYSeries timingLoop(int startN, int endMillis) {
         final XYSeries series = new XYSeries("Time (ms)");
 
@@ -94,9 +76,6 @@ public class Profiler extends ApplicationFrame {
 
 	/**
 	 * Invokes setup and timeMe on the embedded Timeable.
-	 *
-	 * @param n
-	 * @return
 	 */
 	public long timeIt(int n) {
 		timeable.setup(n);
@@ -108,8 +87,6 @@ public class Profiler extends ApplicationFrame {
 
 	/**
 	 * Plots the results.
-	 *
-	 * @param series
 	 */
 	public void plotResults(XYSeries series) {
 		double slope = estimateSlope(series);
@@ -146,9 +123,6 @@ public class Profiler extends ApplicationFrame {
 
 	/**
 	 * Uses simple regression to estimate the slope of the series.
-	 *
-	 * @param series
-	 * @return
 	 */
 	public double estimateSlope(XYSeries series) {
 		SimpleRegression regression = new SimpleRegression();

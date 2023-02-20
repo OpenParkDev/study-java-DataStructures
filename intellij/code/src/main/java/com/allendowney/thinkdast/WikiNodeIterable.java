@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.allendowney.thinkdast;
 
 import java.util.ArrayDeque;
@@ -26,8 +23,6 @@ public class WikiNodeIterable implements Iterable<Node> {
 
 	/**
 	 * Creates an iterable starting with the given Node.
-	 *
-	 * @param root
 	 */
 	public WikiNodeIterable(Node root) {
 	    this.root = root;
@@ -35,14 +30,11 @@ public class WikiNodeIterable implements Iterable<Node> {
 
 	@Override
 	public Iterator<Node> iterator() {
-		return new WikiNodeIterator(root);
+		return new WikiNodeIterator();
 	}
 
 	/**
 	 * Inner class that implements the Iterator.
-	 *
-	 * @author downey
-	 *
 	 */
 	private class WikiNodeIterator implements Iterator<Node> {
 
@@ -51,11 +43,9 @@ public class WikiNodeIterable implements Iterable<Node> {
 
 		/**
 		 * Initializes the Iterator with the root Node on the stack.
-		 *
-		 * @param node
 		 */
-		public WikiNodeIterator(Node node) {
-			stack = new ArrayDeque<Node>();
+		public WikiNodeIterator() {
+			stack = new ArrayDeque<>();
 		    stack.push(root);
 		}
 
@@ -76,7 +66,7 @@ public class WikiNodeIterable implements Iterable<Node> {
 			//System.out.println(node);
 
 			// push the children onto the stack in reverse order
-			List<Node> nodes = new ArrayList<Node>(node.childNodes());
+			List<Node> nodes = new ArrayList<>(node.childNodes());
 			Collections.reverse(nodes);
 			for (Node child: nodes) {
 				stack.push(child);
